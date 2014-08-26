@@ -86,6 +86,42 @@ class Markdown {
         return $result;
     }
 
+    private function get_paragraph_class($string) {
+        $result = $string;
+        $result = preg_replace_callback(
+            "/<p>{([.#])(.*)}\n/m",
+            function($matches) {
+                $id = array();
+                $class = array();
+                foreach (explode(' ', $matches[1].$matches[2]) as $item) {
+                    // debug('item', $item);
+                    if ($item[0] == '.') {
+                        $class[] = ltrim($item, '.');
+                    }
+                    if ($item[0] == '#') {
+                        $class[] = ltrim($item, '#');
+                    }
+                }
+                $attribute = array();
+                if (!empty($id)) {
+                    $attribute[] = ' id="'.implode(' ', $id).'"';
+                }
+                if (!empty($class)) {
+                    $attribute[] = ' class="'.implode(' ', $class).'"';
+                }
+                return '<p'.implode('', $attribute).'>';
+            },
+            $result
+        );
+        return $result;
+    }
+
+    private function get_typographic_characters($string) {
+        $result = $string;
+        $result = str_replace(' -- ', ' &ndash; ', $result);
+        return $result;
+    }
+
     /**
      * return the file parsed from markdown to html or default_text (null) if the file has not been found
      */
@@ -97,6 +133,8 @@ class Markdown {
             }
             $result = $this->get_prefixed_local_url($result);
             $result = MarkdownExtra::defaultTransform($result);
+            $result = $this->get_paragraph_class($result);
+            $result = $this->get_typographic_characters($result);
         }
         return $result;
     }

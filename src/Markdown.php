@@ -70,7 +70,7 @@ class Markdown {
             // [This link](http://example.net/ "title") 
             // <http://example.com/>
             foreach ($a_prefix as $key => $value) {
-                $result = preg_replace('/[^!]\[(.*?)\]\(((?!http[s]?:\/\/|mailto:)'.$key.'.*?)\)/', '[\1]('.$value.'\2)', $result);
+                $result = preg_replace('/([^!])\[(.*?)\]\(((?!http[s]?:\/\/|mailto:)'.$key.'.*?)\)/', '\1[\2]('.$value.'\3)', $result);
                 // [![alt](local_img.png)](local_url)
                 $result = preg_replace(
                     '/\['.
@@ -119,6 +119,8 @@ class Markdown {
     private function get_typographic_characters($string) {
         $result = $string;
         $result = str_replace(' -- ', ' &ndash; ', $result);
+        $result = str_replace(' --,', ' &ndash;,', $result);
+        $result = str_replace(' --<', ' &ndash; <', $result); // if a tag follows, the space has been removed
         return $result;
     }
 

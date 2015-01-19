@@ -86,6 +86,19 @@ class Markdown {
         return $result;
     }
 
+    private function get_formatted_table($string) {
+        $result = preg_replace_callback(
+            // "/<td>(.*)<\/td>/m",
+            "%<td>\n(.*?)</td>%s",
+            function($matches) {
+                // debug('matches', $matches);
+                return MarkdownExtra::defaultTransform($matches[0]);
+            },
+            $string
+        );
+        // debug('result', $result);
+        return $result;
+    }
     private function get_paragraph_class($string) {
         $result = $string;
         $result = preg_replace_callback(
@@ -131,13 +144,15 @@ class Markdown {
         $result = $this->text;
         if (is_null($filename) || file_exists($filename)) {
             if (isset($filename)) {
+                // Aoloe\debug('filename', $filename);
                 $result = file_get_contents($filename);
             }
-            $result = $this->get_prefixed_local_url($result);
-            $result = MarkdownExtra::defaultTransform($result);
-            $result = $this->get_paragraph_class($result);
-            $result = $this->get_typographic_characters($result);
         }
+        $result = $this->get_prefixed_local_url($result);
+        $result = $this->get_formatted_table($result);
+        $result = MarkdownExtra::defaultTransform($result);
+        $result = $this->get_paragraph_class($result);
+        $result = $this->get_typographic_characters($result);
         return $result;
     }
 }

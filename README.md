@@ -8,4 +8,5 @@ wrapper around Michelf's markdown class
         the paragraph
 
 - adds a filter for urls of local links and imagesges
-- convert ' -- ' through `&ndash;`
+- convert ' -- ' through `&ndash;` (other typographic features planned)
+- converts markdown inside of `<td>` elements

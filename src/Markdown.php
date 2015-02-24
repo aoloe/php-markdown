@@ -99,6 +99,21 @@ class Markdown {
         // debug('result', $result);
         return $result;
     }
+
+    private function get_formatted_form($string) {
+        $result = preg_replace_callback(
+            // "/<td>(.*)<\/td>/m",
+            "%<form(.*?)>\n(.*?)</form>%s",
+            function($matches) {
+                // debug('matches', $matches);
+                return '<form'.$matches[1].'>'.MarkdownExtra::defaultTransform($matches[2]).'</form>';
+            },
+            $string
+        );
+        // debug('result', $result);
+        return $result;
+    }
+
     private function get_paragraph_class($string) {
         $result = $string;
         $result = preg_replace_callback(
@@ -150,6 +165,7 @@ class Markdown {
         }
         $result = $this->get_prefixed_local_url($result);
         $result = $this->get_formatted_table($result);
+        $result = $this->get_formatted_form($result);
         $result = MarkdownExtra::defaultTransform($result);
         $result = $this->get_paragraph_class($result);
         $result = $this->get_typographic_characters($result);

@@ -152,6 +152,14 @@ class Markdown {
         return $result;
     }
 
+    private function get_nonbreaking_spaces($string) {
+        $result = $string;
+        $result = str_replace(' :', '&nbsp;:', $result);
+        $result = str_replace(' ?', '&nbsp;?', $result);
+        $result = str_replace(' !', '&nbsp;!', $result);
+        return $result;
+    }
+
     /**
      * return the file parsed from markdown to html or default_text (null) if the file has not been found
      */
@@ -169,6 +177,7 @@ class Markdown {
         $result = MarkdownExtra::defaultTransform($result);
         $result = $this->get_paragraph_class($result);
         $result = $this->get_typographic_characters($result);
+        $result = $this->get_nonbreaking_spaces($result);
         return $result;
     }
 }

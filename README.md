@@ -26,5 +26,5 @@ wrapper around Michelf's markdown class
       \`\`\`csv:....\`\`\`
 - metadata: a multiline pre-formatted block at the beginning or at the end of the file, with the fields defined as YAML.  
           ~~~
-          abcd
+          author: Me Myself
           ~~~

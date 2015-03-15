@@ -24,4 +24,7 @@ wrapper around Michelf's markdown class
       \`\`\`math_def {latex math definitions}\`\`\`  
   we could use it for the external filter definition, too  
       \`\`\`csv:....\`\`\`
-- metadata: a multiline comment at the beginning or at the end of the file, with the fields defined as YAML.
+- metadata: a multiline pre-formatted block at the beginning or at the end of the file, with the fields defined as YAML.
+    ~~~
+    abcd
+    ~~~

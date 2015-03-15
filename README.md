@@ -15,8 +15,8 @@ wrapper around Michelf's markdown class
 
 <http://scholarlymarkdown.com/Scholarly-Markdown-Guide.html>
 
-- `##this is a title #anchor-to-it`  
-  `this is a normal paragraph #anchor-to-it`  
+- `##this is a title {#anchor-to-it}`  
+  `this is a normal paragraph {#anchor-to-it}`  
   the anchor is at the end of the line, with no space between the # and the end of line
 - scholarly-md defines  
       \`\`\`math_def {latex math definitions}\`\`\`  

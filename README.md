@@ -19,6 +19,7 @@ wrapper around Michelf's markdown class
   `this is a normal paragraph #anchor-to-it`  
   the anchor is at the end of the line, with no space between the # and the end of line
 - scholarly-md defines  
-  `\`\`\`math_def {latex math definitions}\`\`\``  
+      \`\`\`math_def {latex math definitions}\`\`\`  
   we could use it for the external filter definition, too  
       \`\`\`csv:....\`\`\`
+-

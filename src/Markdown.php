@@ -70,7 +70,7 @@ class Markdown {
             // [This link](http://example.net/ "title") 
             // <http://example.com/>
             foreach ($a_prefix as $key => $value) {
-                $result = preg_replace('/[^!]\[(.*?)\]\(((?!http[s]?:\/\/|mailto:)'.$key.'.*?)\)/', '[\1]('.$value.'\2)', $result);
+                $result = preg_replace('/([^!])\[(.*?)\]\(((?!http[s]?:\/\/|mailto:)'.$key.'.*?)\)/', '\1[\2]('.$value.'\3)', $result);
                 // [![alt](local_img.png)](local_url)
                 $result = preg_replace(
                     '/\['.
@@ -86,6 +86,80 @@ class Markdown {
         return $result;
     }
 
+    private function get_formatted_table($string) {
+        $result = preg_replace_callback(
+            // "/<td>(.*)<\/td>/m",
+            "%<td>\n(.*?)</td>%s",
+            function($matches) {
+                // debug('matches', $matches);
+                return MarkdownExtra::defaultTransform($matches[0]);
+            },
+            $string
+        );
+        // debug('result', $result);
+        return $result;
+    }
+
+    private function get_formatted_form($string) {
+        $result = preg_replace_callback(
+            // "/<td>(.*)<\/td>/m",
+            "%<form(.*?)>\n(.*?)</form>%s",
+            function($matches) {
+                // debug('matches', $matches);
+                return '<form'.$matches[1].'>'.MarkdownExtra::defaultTransform($matches[2]).'</form>';
+            },
+            $string
+        );
+        // debug('result', $result);
+        return $result;
+    }
+
+    private function get_paragraph_class($string) {
+        $result = $string;
+        $result = preg_replace_callback(
+            "/<p>{([.#])(.*)}\n/m",
+            function($matches) {
+                $id = array();
+                $class = array();
+                foreach (explode(' ', $matches[1].$matches[2]) as $item) {
+                    // debug('item', $item);
+                    if ($item[0] == '.') {
+                        $class[] = ltrim($item, '.');
+                    }
+                    if ($item[0] == '#') {
+                        $class[] = ltrim($item, '#');
+                    }
+                }
+                $attribute = array();
+                if (!empty($id)) {
+                    $attribute[] = ' id="'.implode(' ', $id).'"';
+                }
+                if (!empty($class)) {
+                    $attribute[] = ' class="'.implode(' ', $class).'"';
+                }
+                return '<p'.implode('', $attribute).'>';
+            },
+            $result
+        );
+        return $result;
+    }
+
+    private function get_typographic_characters($string) {
+        $result = $string;
+        $result = str_replace(' -- ', ' &ndash; ', $result);
+        $result = str_replace(' --,', ' &ndash;,', $result);
+        $result = str_replace(' --<', ' &ndash; <', $result); // if a tag follows, the space has been removed
+        return $result;
+    }
+
+    private function get_nonbreaking_spaces($string) {
+        $result = $string;
+        $result = str_replace(' :', '&nbsp;:', $result);
+        $result = str_replace(' ?', '&nbsp;?', $result);
+        $result = str_replace(' !', '&nbsp;!', $result);
+        return $result;
+    }
+
     /**
      * return the file parsed from markdown to html or default_text (null) if the file has not been found
      */
@@ -93,11 +167,17 @@ class Markdown {
         $result = $this->text;
         if (is_null($filename) || file_exists($filename)) {
             if (isset($filename)) {
+                // Aoloe\debug('filename', $filename);
                 $result = file_get_contents($filename);
             }
-            $result = $this->get_prefixed_local_url($result);
-            $result = MarkdownExtra::defaultTransform($result);
         }
+        $result = $this->get_prefixed_local_url($result);
+        $result = $this->get_formatted_table($result);
+        $result = $this->get_formatted_form($result);
+        $result = MarkdownExtra::defaultTransform($result);
+        $result = $this->get_paragraph_class($result);
+        $result = $this->get_typographic_characters($result);
+        $result = $this->get_nonbreaking_spaces($result);
         return $result;
     }
 }

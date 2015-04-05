@@ -11,6 +11,12 @@ wrapper around Michelf's markdown class
 - convert ' -- ' through `&ndash;` (other typographic features planned)
 - converts markdown inside of `<td>` elements
 
+Notes:
+
+- with markdown-extra there is already a support for some markdown inside of html tags:  
+  `<div class="highlight" markdown="1">`  
+  it needs some more testing...
+
 ## Inspiration that could come from Scholarly-Markdown
 
 <http://scholarlymarkdown.com/Scholarly-Markdown-Guide.html>

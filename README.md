@@ -16,6 +16,7 @@ Notes:
 - with markdown-extra there is already a support for some markdown inside of html tags:  
   `<div class="highlight" markdown="1">`  
   it needs some more testing...
+- an html to md converter: http://domchristie.github.io/to-markdown/
 
 ## Inspiration that could come from Scholarly-Markdown
 

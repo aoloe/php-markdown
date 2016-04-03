@@ -127,7 +127,7 @@ class Markdown {
                         $class[] = ltrim($item, '.');
                     }
                     if ($item[0] == '#') {
-                        $class[] = ltrim($item, '#');
+                        $id[] = ltrim($item, '#');
                     }
                 }
                 $attribute = array();
